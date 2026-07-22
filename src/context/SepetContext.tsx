@@ -55,7 +55,7 @@ export function SepetProvider({ children }: { children: React.ReactNode }) {
     const sepetSayisi = sepet.reduce((toplam, item) => toplam + item.adet, 0);
 
     return (
-        <SepetContext.Provider value={{ sepet, sepetSayisi, sepeteEkle, sepettenCikar, iade: sepetiTemizle, sepetiTemizle }}>
+        <SepetContext.Provider value={{ sepet, sepetSayisi, sepeteEkle, sepettenCikar, sepetiTemizle }}>
             {children}
         </SepetContext.Provider>
     );
