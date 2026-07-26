@@ -8,14 +8,14 @@ const legacyRouteRedirects = appRoutes.flatMap((route) => [
   {
     source: `/${route}`,
     destination: `${basePath}/${route}`,
-    permanent: false,
-    basePath: false,
+    permanent: false as const,
+    basePath: false as const,
   },
   {
     source: `/${route}/:path*`,
     destination: `${basePath}/${route}/:path*`,
-    permanent: false,
-    basePath: false,
+    permanent: false as const,
+    basePath: false as const,
   },
 ]);
 
@@ -29,8 +29,8 @@ const nextConfig: NextConfig = {
       {
         source: "/",
         destination: basePath,
-        permanent: false,
-        basePath: false,
+        permanent: false as const,
+        basePath: false as const,
       },
       ...legacyRouteRedirects,
     ];
