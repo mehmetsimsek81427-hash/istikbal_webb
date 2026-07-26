@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { tokenOlustur, tokenDogrula } from "./jwt";
 import type { KayitVerisi, GirisVerisi, AuthYanit, KullaniciOzeti, JwtPayload } from "@/types/auth";
+import { getCookiePath } from "@/lib/base-path";
 
 const COOKIE_ADI = "istikbal_token";
 
@@ -11,7 +12,7 @@ const cookieSecenekleri = {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax" as const,
     maxAge: 60 * 60 * 24 * 7, // 7 gün (saniye cinsinden)
-    path: "/",
+    path: getCookiePath(),
 };
 
 // ─── Kayıt Fonksiyonu ────────────────────────────────────────────────────────

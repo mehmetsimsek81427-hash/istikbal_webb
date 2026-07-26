@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Phone } from "lucide-react";
+import { storeContact } from "@/lib/contact";
 
 export default function Footer() {
     return (
@@ -179,19 +180,19 @@ export default function Footer() {
                     <Phone className="w-5 h-5 text-[#BFC7D5]" />
                     <div className="flex flex-col">
                         <span className="text-[12px] font-semibold text-[#BFC7D5]">İSTİKBAL DEMKA MOBİLYA İLETİŞİM</span>
-                        <span className="text-[16px] font-bold text-white">0532 746 0570</span>
+                        <span className="text-[16px] font-bold text-white">{storeContact.phone.display}</span>
                     </div>
                 </div>
 
                 {/* Orta Taraf: Google Maps Butonu */}
                 <a
-                    href="https://www.google.com/maps/search/?api=1&query=Terazidere+Mahallesi+Esenler+Caddesi+No:99+A+Bayrampaşa+İstanbul"
+                    href={storeContact.googleMaps.href}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex flex-col items-center gap-1 px-[18px] py-[10px] bg-[#FBBF24] text-gray-900 rounded-full font-bold hover:bg-[#F59E0B] hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer"
                 >
                     <span className="text-sm">MAĞAZAMIZI BULUN</span>
-                    <span className="text-[10px] font-medium text-center">Terazidere Mahallesi, Esenler Caddesi No:99 A, Bayrampaşa / İstanbul</span>
+                    <span className="text-[10px] font-medium text-center">{storeContact.address.full}</span>
                 </a>
 
                 {/* Sağ Taraf: Telif Hakları */}

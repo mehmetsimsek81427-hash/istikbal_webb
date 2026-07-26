@@ -336,8 +336,7 @@ export default function Header() {
     const [mobilMenuAcik, setMobilMenuAcik] = useState(false);
 
     const placeholderKelimeListesi = [
-        "Kurban Bayramına Özel Seçili Ürünlerde %70 İndirim!",
-        "Kurban Bayramına Özel Genç Odalarında %15 İndirim!",
+        "Yatak + Baza + Başlık Alımlarında Alez veya Yastık Hediye!",
         "Aradığınız koltuk veya yemek odası takımını yazın...",
         "İstikbal kalitesiyle evinizi yenileyecek fırsatlar..."
     ];
@@ -382,11 +381,8 @@ export default function Header() {
 
                 {/* HAREKETLİ ARAMA BARO */}
                 <div className="flex-1 max-w-2xl mx-2 md:mx-6 flex items-center gap-4">
-                    <div className="relative cursor-pointer text-gray-400 hover:text-[#00519E] flex-shrink-0 group hidden md:block">
+                    <div className="relative cursor-pointer text-gray-400 hover:text-[#00519E] flex-shrink-0 group hidden md:block transition-colors duration-300 ease-out">
                         <span className="text-xl animate-bellRing inline-block">🔔</span>
-                        <span className="absolute -top-1.5 -right-1.5 bg-[#00519E] text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
-                            6
-                        </span>
                     </div>
 
                     <div className="flex-1 relative flex items-center">
@@ -549,8 +545,10 @@ export default function Header() {
             </div>
 
             {/* 4. SARI DUYURU BARO */}
-            <div className="w-full bg-[#FFE600] text-[#00519E] text-center py-2 text-[14px] font-black tracking-wide border-t border-b border-yellow-400 select-none">
-                Kurban Bayramına Özel Seçili Yatak-Bazalarda %20 İndirim!
+            <div className="w-full bg-[#FFE600] text-[#00519E] text-center py-2 text-[11px] md:text-[12px] font-black tracking-wide border-t border-b border-yellow-400 select-none leading-[1.25]">
+                <span className="block">Yatak + Baza + Başlık</span>
+                <span className="block">Alımlarında</span>
+                <span className="block">Sürpriz Hediyeler Sizleri Bekliyor</span>
             </div>
 
         </header>

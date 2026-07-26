@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { tokenDogrula } from "@/lib/jwt";
+import { getCookiePath, withBasePath } from "@/lib/base-path";
 
 // Oturum açılması zorunlu olan rotalar
 const KORUNAN_ROTALAR = ["/sepetim", "/profil", "/siparislerim"];
@@ -22,7 +23,7 @@ export async function middleware(request: NextRequest) {
 
     if (!token) {
         // Kullanıcıyı kayıt sayfasına yönlendir
-        const kayitUrl = new URL("/kayit", request.url);
+        const kayitUrl = new URL(withBasePath("/kayit"), request.url);
         kayitUrl.searchParams.set(
             "uyari",
             "Lütfen öncelikle üye olunuz."
@@ -36,7 +37,7 @@ export async function middleware(request: NextRequest) {
 
     if (!payload) {
         // Geçersiz veya süresi dolmuş token — cookie'yi temizle ve yönlendir
-        const kayitUrl = new URL("/kayit", request.url);
+        const kayitUrl = new URL(withBasePath("/kayit"), request.url);
         kayitUrl.searchParams.set(
             "uyari",
             "Lütfen öncelikle üye olunuz."
@@ -44,7 +45,7 @@ export async function middleware(request: NextRequest) {
         kayitUrl.searchParams.set("from", pathname);
 
         const yanit = NextResponse.redirect(kayitUrl);
-        yanit.cookies.set("istikbal_token", "", { maxAge: 0, path: "/" });
+        yanit.cookies.set("istikbal_token", "", { maxAge: 0, path: getCookiePath() });
         return yanit;
     }
 

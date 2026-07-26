@@ -75,3 +75,529 @@ body {
 .shadow-2xl {
   box-shadow: 0 25px 50px -12px rgba(0, 81, 158, 0.08), 0 0 40px 0 rgba(0, 0, 0, 0.03);
 }
+
+/* Kurumsal Bilgi Kartları – 3D Flip */
+@keyframes corporateFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.corporate-animate {
+  opacity: 0;
+  animation: corporateFadeUp 0.65s ease forwards;
+}
+
+.corporate-animate--1 {
+  animation-delay: 0.08s;
+}
+
+.corporate-animate--2 {
+  animation-delay: 0.18s;
+}
+
+.corporate-animate--3 {
+  animation-delay: 0.28s;
+}
+
+.corporate-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+@media (min-width: 1024px) {
+  .corporate-grid {
+    grid-template-columns: 1fr 1.4fr 1fr;
+    gap: 1.75rem;
+  }
+}
+
+.corporate-grid__item {
+  min-height: 420px;
+}
+
+@media (min-width: 768px) {
+  .corporate-grid__item {
+    min-height: 480px;
+  }
+}
+
+/* Tipografi */
+.corporate-title {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 900;
+  color: #00519E;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.corporate-title--back {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+.corporate-subtitle {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 600;
+  color: #444444;
+}
+
+.corporate-subtitle--light {
+  font-weight: 400;
+  color: #888888;
+  font-size: clamp(0.95rem, 1.8vw, 1.125rem);
+}
+
+.corporate-text {
+  font-size: clamp(1rem, 1.6vw, 1.0625rem);
+  line-height: 1.9;
+  color: #444444;
+}
+
+.corporate-hint {
+  font-size: 0.6875rem;
+  color: rgba(0, 81, 158, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+}
+
+.corporate-title-line {
+  width: 3rem;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #00519E, rgba(0, 81, 158, 0.35));
+  margin-top: 0.75rem;
+}
+
+.corporate-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.4rem 0.875rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #00519E;
+  background: linear-gradient(135deg, rgba(0, 81, 158, 0.1), rgba(0, 81, 158, 0.04));
+  border: 1px solid rgba(0, 81, 158, 0.15);
+}
+
+.corporate-highlight {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-align: center;
+  color: #ffffff;
+  background: linear-gradient(135deg, #00519E 0%, #0066c4 100%);
+  box-shadow: 0 6px 20px -6px rgba(0, 81, 158, 0.45);
+}
+
+.corporate-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(0, 81, 158, 0.08), rgba(0, 81, 158, 0.02));
+  border: 1px solid rgba(0, 81, 158, 0.1);
+  box-shadow: 0 8px 24px -8px rgba(0, 81, 158, 0.2);
+}
+
+/* Flip kart */
+.flip-card {
+  perspective: 1200px;
+  cursor: pointer;
+  outline: none;
+  height: 100%;
+  min-height: inherit;
+  transition: transform 0.35s ease;
+}
+
+.flip-card:focus-visible {
+  outline: 2px solid #00519E;
+  outline-offset: 4px;
+  border-radius: 20px;
+}
+
+.flip-card:not(.flip-card--flipped):not(.flip-card--manager):hover {
+  transform: translateY(-6px);
+}
+
+.flip-card--manager:not(.flip-card--flipped):hover {
+  transform: translateY(-4px);
+}
+
+.flip-card:not(.flip-card--flipped):hover .flip-card__inner {
+  box-shadow:
+    0 24px 48px -14px rgba(0, 81, 158, 0.2),
+    0 12px 28px -10px rgba(0, 0, 0, 0.08);
+}
+
+.flip-card__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  transform-style: preserve-3d;
+  transition: transform 0.4s ease, box-shadow 0.35s ease;
+  border-radius: 20px;
+  box-shadow:
+    0 10px 36px -10px rgba(0, 81, 158, 0.14),
+    0 4px 14px -4px rgba(0, 0, 0, 0.05);
+}
+
+.flip-card__inner--compact {
+  min-height: 280px;
+}
+
+.flip-card--flipped .flip-card__inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card__face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 81, 158, 0.14);
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 251, 255, 0.88) 55%,
+    rgba(240, 247, 255, 0.82) 100%
+  );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  overflow: hidden;
+}
+
+.flip-card__back {
+  transform: rotateY(180deg);
+}
+
+.flip-card__content {
+  height: 100%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.flip-card__content--spacious {
+  padding: 2rem 2.25rem;
+}
+
+.flip-card__content--center {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.flip-card__content--scroll {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.flip-card__content--manager {
+  padding: 0;
+  height: 100%;
+}
+
+/* Yönetim ana kart */
+.corporate-card {
+  border-radius: 20px;
+  border: 1px solid rgba(0, 81, 158, 0.14);
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(248, 251, 255, 0.88) 55%,
+    rgba(240, 247, 255, 0.82) 100%
+  );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 10px 36px -10px rgba(0, 81, 158, 0.14),
+    0 4px 14px -4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.corporate-card:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 24px 48px -14px rgba(0, 81, 158, 0.2),
+    0 12px 28px -10px rgba(0, 0, 0, 0.08);
+}
+
+.corporate-card__body {
+  padding: 2rem 2.25rem;
+  height: 100%;
+}
+
+/* Yönetici alt kartları */
+.manager-card__stripe {
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(90deg, #00519E, #0066c4, rgba(0, 81, 158, 0.4));
+  flex-shrink: 0;
+}
+
+.manager-card__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.75rem 1.5rem 1.5rem;
+  height: calc(100% - 4px);
+}
+
+.manager-card__body--back {
+  align-items: flex-start;
+  text-align: left;
+  padding: 1.5rem 1.75rem;
+}
+
+.manager-card__body--back .manager-avatar {
+  align-self: center;
+}
+
+.manager-card__body--back .manager-card__name,
+.manager-card__body--back .manager-card__role {
+  align-self: stretch;
+  text-align: center;
+}
+
+.manager-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(0, 81, 158, 0.12), rgba(0, 81, 158, 0.04));
+  border: 2px solid rgba(0, 81, 158, 0.15);
+  box-shadow: 0 8px 24px -8px rgba(0, 81, 158, 0.25);
+  margin-bottom: 1rem;
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
+}
+
+.manager-avatar--photo {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  background: #f0f4f8;
+  border-color: rgba(0, 81, 158, 0.2);
+  box-shadow:
+    0 8px 24px -8px rgba(0, 81, 158, 0.3),
+    0 2px 8px -2px rgba(0, 0, 0, 0.1);
+}
+
+.flip-card--manager:not(.flip-card--flipped):hover .manager-avatar--photo {
+  box-shadow:
+    0 12px 28px -8px rgba(0, 81, 158, 0.35),
+    0 4px 12px -4px rgba(0, 0, 0, 0.12);
+}
+
+.manager-avatar--large {
+  width: 5.5rem;
+  height: 5.5rem;
+}
+
+.manager-avatar__icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  color: #00519E;
+}
+
+.manager-avatar--large .manager-avatar__icon {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.manager-card__name {
+  font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+  font-weight: 900;
+  color: #00519E;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.manager-card__role {
+  margin-top: 0.375rem;
+  font-size: 0.875rem;
+  font-style: italic;
+  font-weight: 500;
+  color: #888888;
+}
+
+.manager-card__bio {
+  margin-top: 1rem;
+  text-align: left;
+}
+
+.manager-card__hint {
+  margin-top: 1.25rem;
+  font-size: 0.625rem;
+  color: rgba(0, 81, 158, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+}
+
+/* İletişim butonları */
+.contact-btn-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.contact-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 0.75rem;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 81, 158, 0.1);
+  background: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  box-shadow: 0 4px 14px -4px rgba(0, 0, 0, 0.08);
+  transition:
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.contact-btn:hover {
+  background: rgba(0, 81, 158, 0.06);
+  border-color: rgba(0, 81, 158, 0.22);
+  transform: translateX(4px);
+  box-shadow: 0 8px 22px -6px rgba(0, 81, 158, 0.18);
+}
+
+.contact-btn__icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 12px;
+  flex-shrink: 0;
+  background: rgba(0, 81, 158, 0.08);
+  transition: transform 0.35s ease, background-color 0.35s ease;
+}
+
+.contact-btn:hover .contact-btn__icon-wrap {
+  transform: scale(1.1);
+}
+
+.contact-btn__icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.contact-btn__content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+  text-align: left;
+}
+
+.contact-btn__arrow {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  color: rgba(0, 81, 158, 0.35);
+  transition: transform 0.35s ease, color 0.35s ease;
+}
+
+.contact-btn:hover .contact-btn__arrow {
+  transform: translateX(3px);
+  color: #00519E;
+}
+
+.contact-btn__label {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  color: #00519E;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.contact-btn__value {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #555555;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+/* İletişim buton renk varyantları */
+.contact-btn--phone .contact-btn__icon-wrap,
+.contact-btn--gsm .contact-btn__icon-wrap {
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.contact-btn--phone:hover,
+.contact-btn--gsm:hover {
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.contact-btn--email .contact-btn__icon-wrap {
+  background: rgba(227, 6, 19, 0.1);
+}
+
+.contact-btn--email:hover {
+  background: rgba(227, 6, 19, 0.06);
+}
+
+.contact-btn--instagram .contact-btn__icon-wrap {
+  background: rgba(225, 48, 108, 0.12);
+}
+
+.contact-btn--instagram:hover {
+  background: rgba(225, 48, 108, 0.07);
+}
+
+.contact-btn--facebook .contact-btn__icon-wrap {
+  background: rgba(24, 119, 242, 0.12);
+}
+
+.contact-btn--facebook:hover {
+  background: rgba(24, 119, 242, 0.07);
+}
+
+.contact-btn--googleMaps .contact-btn__icon-wrap,
+.contact-btn--address .contact-btn__icon-wrap {
+  background: rgba(234, 67, 53, 0.12);
+}
+
+.contact-btn--googleMaps:hover,
+.contact-btn--address:hover {
+  background: rgba(234, 67, 53, 0.07);
+}
+
+.contact-btn--website .contact-btn__icon-wrap {
+  background: rgba(15, 54, 92, 0.12);
+}
+
+.contact-btn--website:hover {
+  background: rgba(15, 54, 92, 0.07);
+}

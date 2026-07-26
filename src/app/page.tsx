@@ -1,27 +1,17 @@
 "use client";
-
 import { useState, useEffect } from "react";
-import { useSepet } from "@/context/SepetContext";
+import Image from "next/image";
+import CorporateInfoSection from "@/components/home/CorporateInfoSection";
 
 export default function Home() {
-  const { sepeteEkle } = useSepet();
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const sliderVerileri = [
-    {
-      id: 1,
-      ustBaslik: "YENİ SEZON ESİNTİSİ",
-      baslik: "Evinde İstikbal Konforuna Yer Aç!",
-      aciklama: "Yenilikçi tasarımlar, kurumsal güvence ve %40'a varan evlilik/yenileme indirimleriyle hayalindeki evi tasarla.",
-      bgGradient: "from-[#0F365C] to-[#00519E]"
-    },
-    {
-      id: 2,
-      ustBaslik: "YATAKLARDA BÜYÜK FIRSAT",
-      baslik: "Kurban Bayramına Özel Uykular",
-      aciklama: "Seçili yatak, baza ve başlıklarda net %20 indirim fırsatını kaçırmayın. Sağlıklı uyku her evin hakkı.",
-      bgGradient: "from-[#9A1B1F] to-[#E30613]"
-    }
+    { id: 1, gorsel: "/slider1.jpeg" },
+    { id: 2, gorsel: "/slider2.jpeg" },
+    { id: 3, gorsel: "/slider3.jpeg" },
+    { id: 4, gorsel: "/slider4.jpeg" },
+    { id: 5, gorsel: "/slider5.jpeg" }
   ];
 
   useEffect(() => {
@@ -31,88 +21,96 @@ export default function Home() {
     return () => clearInterval(timer);
   }, [sliderVerileri.length]);
 
-  const urunler = [
-    { id: 1, isim: "Lena Koltuk Takımı (3+3+B)", kategori: "Koltuk Takımı", eskiFiyat: "64.900 TL", yeniFiyat: "45.430 TL", indirim: "%30 İndirim", etiket: "Çok Satan", emoji: "🛋️" },
-    { id: 2, isim: "Vera Yemek Odası Takımı", kategori: "Yemek Odası", eskiFiyat: "52.300 TL", yeniFiyat: "39.225 TL", indirim: "%25 İndirim", etiket: "Yeni", emoji: "🪑" },
-    { id: 3, isim: "Optimal Prime Yatak Baza Başlık Seti", kategori: "Yatak & Baza", eskiFiyat: "28.400 TL", yeniFiyat: "19.880 TL", indirim: "%30 İndirim", etiket: "Fırsat Ürünü", emoji: "🛏️" },
-    { id: 4, isim: "Diego Duvar Ünitesi", kategori: "Tv Ünitesi", eskiFiyat: "18.600 TL", yeniFiyat: "14.880 TL", indirim: "%20 İndirim", etiket: "Kargo Bedava", emoji: "📺" }
-  ];
-
   return (
     <div className="w-full bg-[#F8F9FA] pb-24 font-sans antialiased">
-
-      {/* KAHRAMAN SLIDER: w-full yapıldı, ekranı orijinali gibi tam doldurur */}
+      {/* KAHRAMAN SLIDER (Bölünmüş Tasarım - Sol Yazı, Sağ Görsel) */}
       <div className="w-full px-4 md:px-12 pt-6">
-        <div className={`w-full bg-gradient-to-r ${sliderVerileri[currentSlide].bgGradient} rounded-2xl p-6 md:p-16 flex flex-col md:flex-row justify-between items-center text-white min-h-[350px] md:min-h-[450px] shadow-md relative overflow-hidden transition-all duration-700`}>
+        <div className="w-full rounded-2xl shadow-[0_16px_40px_-12px_rgba(15,54,92,0.45)] overflow-hidden flex flex-col md:flex-row bg-[#0F365C] h-auto md:h-[450px] lg:h-[500px]">
 
-          <div className="max-w-xl z-10 space-y-4 md:space-y-6 text-center md:text-left">
-            <span className="bg-[#F2A900] text-[#00519E] text-[10px] md:text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
-              {sliderVerileri[currentSlide].ustBaslik}
+          {/* Sol Taraf: Yazı ve İletişim Bilgileri (İstikbal Laciverti) */}
+          <div className="w-full md:w-[45%] lg:w-[40%] p-8 md:p-10 lg:p-12 flex flex-col justify-center relative z-20">
+            <span className="bg-[#E30613] text-white text-[10px] md:text-xs font-black px-3 py-1.5 rounded-full w-max mb-6 shadow-md uppercase tracking-wider">
+              Demka Mobilya İstikbal
             </span>
-            <h2 className="text-2xl md:text-5xl font-black tracking-tight leading-tight">
-              {sliderVerileri[currentSlide].baslik}
+
+            <h2 className="font-black text-white leading-[1.1] mb-2">
+              <span className="block text-sm md:text-base lg:text-lg font-semibold text-white/80 tracking-wide mb-3 md:mb-4">
+                Alışveriş Kodunuz
+              </span>
+              <span className="block text-[3.5rem] md:text-[4.5rem] lg:text-[5.25rem] text-[#F2A900] leading-none tracking-tight drop-shadow-[0_4px_20px_rgba(242,169,0,0.35)]">
+                4080
+              </span>
             </h2>
-            <p className="text-gray-200 text-xs md:text-lg font-light">
-              {sliderVerileri[currentSlide].aciklama}
-            </p>
-            <div className="flex justify-center md:justify-start gap-4 pt-2">
-              <button className="bg-[#E30613] text-white font-bold px-6 md:px-8 py-2.5 md:py-3.5 rounded-md text-xs md:text-sm uppercase tracking-wide cursor-pointer">
-                Şimdi Keşfet
-              </button>
-            </div>
-          </div>
 
-          {/* Sağ Alan Temsili Görsel Kutusu: Mobilde yer kaplamasın diye gizlendi (hidden md:flex) */}
-          <div className="w-[340px] h-[220px] bg-white/10 backdrop-blur-md rounded-xl border border-white/20 flex flex-col justify-center items-center p-6 text-center z-10 hidden md:flex">
-            <span className="text-4xl mb-2">🛋️</span>
-            <h4 className="font-black text-base">Hızlı Teslimat Güvencesi</h4>
-            <p className="text-xs text-gray-200 mt-1">30 günde kapında.</p>
-          </div>
-        </div>
-      </div>
-
-      {/* POPÜLER ÜRÜNLER VİTRİNİ */}
-      <div className="w-full px-4 md:px-12 mt-16">
-        <div className="flex justify-between items-end mb-8 border-b border-gray-200 pb-4">
-          <div>
-            <h3 className="text-lg md:text-2xl font-black text-[#00519E] tracking-tight uppercase">Sizin İçin Seçtiklerimiz</h3>
-          </div>
-        </div>
-
-        {/* ÜRÜN KARTLARI GRID YAPISI: Mobilde 1, tablette 2, bilgisayarda 4 sütun (Tam Uyumlu) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          {urunler.map((urun) => (
-            <div key={urun.id} className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
-              <div>
-                <div className="flex justify-between items-center mb-3">
-                  <span className="bg-[#E30613] text-white text-[10px] font-black px-2 py-0.5 rounded">{urun.indirim}</span>
-                </div>
-                <div className="w-full h-40 md:h-48 bg-[#F8F9FA] rounded-lg flex items-center justify-center text-4xl md:text-5xl shadow-inner">
-                  {urun.emoji}
-                </div>
-                <div className="mt-4">
-                  <span className="text-[10px] text-[#F2A900] font-black uppercase tracking-widest block">{urun.kategori}</span>
-                  <h4 className="font-bold text-[#00519E] text-sm mt-1 line-clamp-2 h-10">{urun.isim}</h4>
-                </div>
+            {/* Kurumsal İletişim Bilgileri (Profesyonel SVG İkonlar) */}
+            <div className="mt-8 flex flex-col gap-3">
+              {/* Adres */}
+              <div className="flex items-center text-white/90 text-xs md:text-sm bg-white/5 p-3 rounded-lg border border-white/10 transition-all duration-300 ease-out">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 mr-3 text-[#F2A900] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span className="leading-relaxed">Esenler Cad. No:99 A Bayrampaşa/İST (34035)</span>
               </div>
 
-              <div className="mt-4 pt-4 border-t border-gray-100">
-                <div className="flex flex-col">
-                  <span className="text-xs text-gray-400 line-through">{urun.eskiFiyat}</span>
-                  <span className="text-lg md:text-xl font-black text-[#E30613] mt-0.5">{urun.yeniFiyat}</span>
-                </div>
+              {/* İletişim Butonları */}
+              <div className="flex flex-wrap gap-3">
+                <a href="tel:05327460570" className="flex items-center text-white/90 text-xs bg-white/5 px-4 py-2.5 rounded-lg border border-white/10 hover:bg-white/12 hover:border-white/20 transition-all duration-300 ease-out">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 mr-2 text-[#F2A900]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  <span className="font-medium">0532 746 0570</span>
+                </a>
+
+                <a href="https://instagram.com/demkamobilya_istikbal" target="_blank" rel="noreferrer" className="flex items-center text-white/90 text-xs bg-white/5 px-4 py-2.5 rounded-lg border border-white/10 hover:bg-white/12 hover:border-white/20 transition-all duration-300 ease-out">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 mr-2 text-[#F2A900]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01M7 21h10a4 4 0 004-4V7a4 4 0 00-4-4H7a4 4 0 00-4 4v10a4 4 0 004 4z" />
+                  </svg>
+                  <span className="font-medium">@demkamobilya_istikbal</span>
+                </a>
+
+                <a href="mailto:demkamobilyaistikbal@gmail.com" className="flex items-center text-white/90 text-xs bg-white/5 px-4 py-2.5 rounded-lg border border-white/10 hover:bg-white/12 hover:border-white/20 transition-all duration-300 ease-out">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 mr-2 text-[#F2A900]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span className="font-medium">E-Posta</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Slayt Noktaları (Sadece yazının altına hizalandı) */}
+            <div className="mt-8 flex space-x-2">
+              {sliderVerileri.map((_, index) => (
                 <button
-                  onClick={() => sepeteEkle({ id: urun.id, isim: urun.isim, yeniFiyat: urun.yeniFiyat, emoji: urun.emoji, kategori: urun.kategori })}
-                  className="w-full mt-4 bg-white border border-[#00519E] hover:bg-[#00519E] hover:text-white text-[#00519E] font-black py-2.5 rounded-md text-xs transition-colors shadow-sm cursor-pointer uppercase tracking-wide"
-                >
-                  Sepete Ekle
-                </button>
-              </div>
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  aria-label={`Slayt ${index + 1}`}
+                  className={`h-2 rounded-full transition-all duration-300 ease-out ${currentSlide === index
+                      ? "w-8 bg-[#F2A900] shadow-[0_0_8px_rgba(242,169,0,0.5)]"
+                      : "w-2 bg-white/30 hover:bg-white/60 hover:scale-110"
+                    }`}
+                />
+              ))}
             </div>
-          ))}
+          </div>
+
+          {/* Sağ Taraf: Sadece Görseller (Sağa yaslı, temiz görünüm) */}
+          <div className="w-full md:w-[55%] lg:w-[60%] relative h-[250px] md:h-full bg-gray-100">
+            <Image
+              key={`main-${currentSlide}`}
+              src={sliderVerileri[currentSlide].gorsel}
+              alt={`Demka Mobilya Görsel ${currentSlide + 1}`}
+              fill
+              sizes="(max-width: 768px) 100vw, 60vw"
+              className="object-cover object-center transition-opacity duration-700 ease-in-out"
+              priority
+            />
+          </div>
+
         </div>
       </div>
 
+      <CorporateInfoSection />
     </div>
   );
 }

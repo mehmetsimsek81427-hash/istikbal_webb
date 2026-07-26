@@ -8,6 +8,7 @@ import React, {
     useCallback,
 } from "react";
 import { useRouter } from "next/navigation";
+import { apiFetch } from "@/lib/api-client";
 import type { KullaniciOzeti, KayitVerisi, GirisVerisi, AuthYanit } from "@/types/auth";
 
 // ─── Context Tipi ────────────────────────────────────────────────────────────
@@ -38,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const oturumKontrol = async () => {
         try {
-            const yanit = await fetch("/api/auth/me");
+            const yanit = await apiFetch("/api/auth/me");
             if (yanit.ok) {
                 const veri = await yanit.json();
                 if (veri.basarili && veri.kullanici) {
@@ -56,7 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const girisYap = useCallback(async (veri: GirisVerisi): Promise<AuthYanit> => {
         try {
-            const yanit = await fetch("/api/auth/login", {
+            const yanit = await apiFetch("/api/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(veri),
@@ -78,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const kayitOl = useCallback(async (veri: KayitVerisi): Promise<AuthYanit> => {
         try {
-            const yanit = await fetch("/api/auth/register", {
+            const yanit = await apiFetch("/api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(veri),
@@ -100,7 +101,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const cikisYap = useCallback(async (): Promise<void> => {
         try {
-            await fetch("/api/auth/logout", { method: "POST" });
+            await apiFetch("/api/auth/logout", { method: "POST" });
         } finally {
             setKullanici(null);
             router.push("/");
