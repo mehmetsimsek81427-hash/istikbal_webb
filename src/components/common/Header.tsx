@@ -375,7 +375,7 @@ export default function Header() {
     }, [girisAcik]);
 
     return (
-        <header className="w-full bg-white relative z-50 font-sans border-b border-gray-200 antialiased">
+        <header className="w-full bg-white relative z-50 font-sans border-b border-gray-200 antialiased overflow-x-clip">
 
             {/* 1. ÜST MAVİ BAR (Masaüstü genişliğinde açılır, mobilde gizlenir) */}
             <div className="w-full bg-[#00519E] text-white py-2 px-4 md:px-12 text-[11px] hidden md:flex justify-between items-center font-semibold tracking-tight">
@@ -391,7 +391,7 @@ export default function Header() {
             </div>
 
             {/* 2. ORTA BAR (Ekranı tam dolduracak şekilde esnetilmiş ana satır) */}
-            <div className="w-full py-4 px-4 md:px-12 flex justify-between items-center gap-4 relative">
+            <div className="w-full py-4 px-4 md:px-12 flex justify-between items-center gap-2 sm:gap-4 relative min-w-0">
 
                 {/* Yüksek Kaliteli Harici Logo Alanı */}
                 <Link href="/" className="flex justify-center items-stretch select-none flex-shrink-0 h-[36px] w-[154px] md:h-[44px] md:w-[184px] relative overflow-hidden p-0 m-0">
@@ -407,12 +407,12 @@ export default function Header() {
                 </Link>
 
                 {/* HAREKETLİ ARAMA BARO */}
-                <div className="flex-1 max-w-2xl mx-2 md:mx-6 flex items-center gap-4">
+                <div className="header-search-wrap flex-1 max-w-2xl mx-1 sm:mx-2 md:mx-6 flex items-center gap-2 sm:gap-4 min-w-0">
                     <div className="relative cursor-pointer text-gray-400 hover:text-[#00519E] flex-shrink-0 group hidden md:block transition-colors duration-300 ease-out">
                         <span className="text-xl animate-bellRing inline-block">🔔</span>
                     </div>
 
-                    <div className="flex-1 relative flex items-center">
+                    <div className="header-search-input-wrap flex-1 relative flex items-center min-w-0">
                         <span className="absolute left-4 text-gray-400 text-sm">🔍</span>
                         <input
                             type="text"
@@ -431,7 +431,7 @@ export default function Header() {
                 </div>
 
                 {/* SAĞ AKSİYONLAR */}
-                <div className="flex items-center gap-4 md:gap-6 text-[12px] md:text-[13px] font-semibold text-gray-700 flex-shrink-0">
+                <div className="flex items-center gap-2 sm:gap-4 md:gap-6 text-[12px] md:text-[13px] font-semibold text-gray-700 flex-shrink-0">
 
                     {/* Giriş / Kullanıcı Popup */}
                     <div ref={kullaniciMenuRef} className="relative h-full flex items-center py-2 z-[120]">
@@ -447,7 +447,7 @@ export default function Header() {
                         </button>
 
                         {girisAcik && (
-                            <div className="absolute top-[40px] right-0 w-[250px] bg-white border border-gray-200 shadow-2xl rounded-md p-4 z-[120] text-left flex flex-col gap-2">
+                            <div className="header-user-popup absolute top-[40px] right-0 w-[250px] bg-white border border-gray-200 shadow-2xl rounded-md p-4 z-[120] text-left flex flex-col gap-2">
                                 {kullanici ? (
                                     <>
                                         <Link
@@ -538,7 +538,7 @@ export default function Header() {
                     {MEGA_MENU_DATA.map((menu) => (
                         <div
                             key={menu.id}
-                            className="w-full lg:w-auto py-2 lg:py-0 h-full flex flex-col lg:flex-row lg:items-center border-b-2 border-transparent hover:border-[#00519E] transition-all whitespace-nowrap"
+                            className="nav-category-item w-full lg:w-auto py-2 lg:py-0 h-full flex flex-col lg:flex-row lg:items-center border-b-2 border-transparent hover:border-[#00519E] transition-all lg:whitespace-nowrap"
                             onMouseEnter={() => setAktifMenu(menu.id)}
                             onMouseLeave={() => setAktifMenu(null)}
                         >
@@ -621,7 +621,7 @@ export default function Header() {
             </div>
 
             {/* 4. DUYURU BARO */}
-            <div className="w-full bg-[#FCF9F2] text-gray-900 text-center px-3 md:px-6 text-[11px] md:text-[12px] font-black tracking-wide border-t border-b border-[#FCF9F2] select-none leading-[1.25] flex items-stretch justify-center gap-5 md:gap-10">
+            <div className="w-full bg-[#FCF9F2] text-gray-900 text-center px-3 md:px-6 text-[11px] md:text-[12px] font-black tracking-wide border-t border-b border-[#FCF9F2] select-none leading-[1.25] flex items-stretch justify-center gap-3 sm:gap-5 md:gap-10 min-w-0">
                 <div className="relative shrink-0 self-stretch w-14 md:w-16 overflow-hidden">
                     <Image
                         src={withBasePath("/koyu1.jpeg")}
