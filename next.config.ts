@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "/demkamobilya";
 
-const appRoutes = ["giris", "kayit", "sepetim", "profil", "siparislerim"];
+const appRoutes = ["giris", "kayit", "profil", "profile", "kullanici", "kullanici-hakkinda", "urun"];
 
 const legacyRouteRedirects = appRoutes.flatMap((route) => [
   {

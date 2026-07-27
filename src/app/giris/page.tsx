@@ -247,7 +247,7 @@ export default function GirisPage() {
 
             {/* Logo */}
             <Link href="/" className="flex items-center gap-1 select-none mb-8">
-                <span className="text-[#F2A900] text-2xl font-black italic">///</span>
+                <span className="text-[#F2A900] text-2xl font-black italic">{'///'}</span>
                 <span className="text-[#00519E] text-3xl font-black italic tracking-tighter">istikbal</span>
             </Link>
 
@@ -270,7 +270,7 @@ export default function GirisPage() {
                 <Link href="/" className="text-[#00519E] hover:underline font-semibold">
                     Gizlilik Politikası
                 </Link>
-                'nı kabul etmiş olursunuz.
+                &apos;nı kabul etmiş olursunuz.
             </p>
 
         </div>

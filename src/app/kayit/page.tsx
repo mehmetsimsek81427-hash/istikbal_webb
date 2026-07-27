@@ -152,6 +152,9 @@ function KayitFormu() {
             lastName: form.soyad.trim(),
             email: form.email.trim(),
             password: form.sifre,
+            phone: form.telefon.trim() || undefined,
+            dateOfBirth: form.dogumTarihi || undefined,
+            gender: form.cinsiyet || undefined,
         });
 
         setYukleniyor(false);
@@ -450,11 +453,11 @@ function KayitFormu() {
                                     <Link href="/" className="text-[#00519E] underline hover:no-underline font-bold">
                                         Üyelik Sözleşmesi
                                     </Link>
-                                    'ni ve{" "}
+                                    &apos;ni ve{" "}
                                     <Link href="/" className="text-[#00519E] underline hover:no-underline font-bold">
                                         Gizlilik Politikası
                                     </Link>
-                                    'nı okudum ve kabul ediyorum.{" "}
+                                    &apos;nı okudum ve kabul ediyorum.{" "}
                                     <span className="text-red-500">*</span>
                                 </span>
                             </label>
@@ -526,7 +529,7 @@ export default function KayitPage() {
 
             {/* Logo */}
             <Link href="/" className="flex items-center gap-1 select-none mb-8">
-                <span className="text-[#F2A900] text-2xl font-black italic">///</span>
+                <span className="text-[#F2A900] text-2xl font-black italic">{'///'}</span>
                 <span className="text-[#00519E] text-3xl font-black italic tracking-tighter">istikbal</span>
             </Link>
 

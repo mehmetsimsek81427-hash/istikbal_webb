@@ -1,10 +1,18 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import CorporateInfoSection from "@/components/home/CorporateInfoSection";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import CommentSection from "@/components/comments/CommentSection";
 import { withBasePath } from "@/lib/base-path";
+import { getProductById } from "@/lib/products";
 
-export default function Home() {
+export default function ProductPage() {
+  const params = useParams();
+  const id = typeof params.id === "string" ? params.id : "";
+  const product = getProductById(id);
+
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const sliderVerileri = [
@@ -12,7 +20,7 @@ export default function Home() {
     { id: 2, gorsel: "/slider2.jpeg" },
     { id: 3, gorsel: "/slider3.jpeg" },
     { id: 4, gorsel: "/slider4.jpeg" },
-    { id: 5, gorsel: "/slider5.jpeg" }
+    { id: 5, gorsel: "/slider5.jpeg" },
   ];
 
   useEffect(() => {
@@ -21,6 +29,17 @@ export default function Home() {
     }, 5000);
     return () => clearInterval(timer);
   }, [sliderVerileri.length]);
+
+  if (!product) {
+    return (
+      <div className="w-full px-4 md:px-12 py-16 text-center">
+        <h1 className="text-2xl font-black text-[#00519E]">Ürün bulunamadı</h1>
+        <Link href="/" className="inline-block mt-6 text-[#00519E] font-semibold hover:underline">
+          Ana sayfaya dön
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full bg-[#F8F9FA] pb-24 font-sans antialiased">
@@ -111,7 +130,9 @@ export default function Home() {
         </div>
       </div>
 
-      <CorporateInfoSection />
+      <div className="w-full px-4 md:px-12">
+        <CommentSection productId={product.id} />
+      </div>
     </div>
   );
 }

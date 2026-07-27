@@ -3,9 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/common/Header";
 import Footer from "@/components/common/Footer";
-// Sepet havuzumuzu buraya çağırıyoruz
-import { SepetProvider } from "@/context/SepetContext";
-// Kimlik doğrulama bağlamı
 import { AuthProvider } from "@/context/AuthContext";
 
 const geistSans = Geist({
@@ -31,15 +28,10 @@ export default function RootLayout({
   return (
     <html lang="tr">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-istikbal-gray-light`}>
-        {/* Tüm siteyi sepet havuzu ile sararak ortak hafızayı aktifleştiriyoruz */}
         <AuthProvider>
-          <SepetProvider>
-            <Header />
-            <main>
-              {children}
-            </main>
-            <Footer />
-          </SepetProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
         </AuthProvider>
       </body>
     </html>

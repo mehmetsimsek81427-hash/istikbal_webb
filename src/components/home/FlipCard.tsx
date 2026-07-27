@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { type MouseEvent as ReactMouseEvent, type ReactNode, useState } from "react";
 
 type FlipCardProps = {
   front: ReactNode;
@@ -13,10 +13,18 @@ type FlipCardProps = {
 export default function FlipCard({ front, back, className = "", compact = false, manager = false }: FlipCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
 
+  const handleCardClick = (event: ReactMouseEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLElement;
+    if (target.closest("a, button, input, textarea, select")) {
+      return;
+    }
+    setIsFlipped((prev) => !prev);
+  };
+
   return (
     <div
       className={`flip-card group ${manager ? "flip-card--manager" : ""} ${isFlipped ? "flip-card--flipped" : ""} ${className}`}
-      onClick={() => setIsFlipped((prev) => !prev)}
+      onClick={handleCardClick}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();

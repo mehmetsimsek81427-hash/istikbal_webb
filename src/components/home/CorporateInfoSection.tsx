@@ -3,6 +3,7 @@
 import Image from "next/image";
 import FlipCard from "@/components/home/FlipCard";
 import { contactLinks } from "@/lib/contact";
+import { withBasePath } from "@/lib/base-path";
 
 const aboutText =
   "15 yılı aşkın süredir İstikbal ailesinin güvenilir çözüm ortağı olarak müşterilerimize kaliteli, konforlu ve estetik yaşam alanları sunuyoruz. Demka Mobilya olarak müşteri memnuniyetini her zaman ön planda tutuyor, zengin ürün yelpazemiz, uygun fiyat politikamız ve profesyonel hizmet anlayışımızla sizlere en iyi alışveriş deneyimini yaşatmayı hedefliyoruz. Siz de Demka Mobilya'nın kalite ve güvenini yakından keşfetmek için mağazamızı ziyaret edebilir veya bizimle iletişime geçebilirsiniz.";
@@ -11,7 +12,7 @@ const managers: { name: string; role: string; bio: string; image?: string }[] = 
   {
     name: "Mehmet Şimşek",
     role: "Genel Müdür",
-    image: "/silider.6.jpeg",
+    image: "/slider6.jpeg",
     bio: "25 yılı aşkın süredir İstikbal bünyesinde edindiğim deneyim ve bilgi birikimiyle, meslek hayatıma çırak olarak başladığım bu yolculukta bugün Demka Mobilya'nın yönetiminde sizlere hizmet vermekten büyük gurur duyuyorum. Uzun yılların kazandırdığı tecrübe, müşteri odaklı hizmet anlayışı ve kaliteye verdiğimiz önem sayesinde her misafirimizi en doğru şekilde ağırlamayı hedefliyoruz. Sizleri mağazamızda ağırlamaktan mutluluk duyarız.",
   },
   {
@@ -42,7 +43,7 @@ function ManagerAvatar({ imageSrc, name, large = false }: { imageSrc?: string; n
     return (
       <div className={`manager-avatar manager-avatar--photo ${large ? "manager-avatar--large" : ""}`}>
         <Image
-          src={imageSrc}
+          src={withBasePath(imageSrc)}
           alt={name}
           fill
           sizes="(max-width: 768px) 72px, 88px"
@@ -89,8 +90,7 @@ function ContactButton({
       href={href}
       target={external ? "_blank" : undefined}
       rel={external ? "noopener noreferrer" : undefined}
-      onClick={(event) => event.stopPropagation()}
-      className={`contact-btn contact-btn--${id}`}
+      className={`contact-btn contact-btn--${id} cursor-pointer`}
     >
       <span className="contact-btn__icon-wrap" aria-hidden="true">
         <span className="contact-btn__icon">{icon}</span>

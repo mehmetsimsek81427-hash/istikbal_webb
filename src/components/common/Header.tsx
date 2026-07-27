@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
-import { useSepet } from "@/context/SepetContext";
+import { useState, useEffect, useRef, useSyncExternalStore } from "react";
 import { useAuth } from "@/context/AuthContext";
+import CommentAuthPrompt from "@/components/comments/CommentAuthPrompt";
+import { DEFAULT_PRODUCT_ID } from "@/lib/products";
+import { withBasePath } from "@/lib/base-path";
+import { getProfilePath } from "@/types/profile";
 import { 
   Sofa, Armchair, Table, Monitor, 
   Tv, 
@@ -14,13 +17,13 @@ import {
   BookOpen, 
   TreePine, Flower2, 
   Coffee, 
-  Sprout, 
-  Zap as Lightning 
+  Sprout,
+  type LucideIcon,
 } from "lucide-react";
 
 // İkon eşleştirme fonksiyonu
 const getIconForButton = (buttonName: string) => {
-  const iconMap: { [key: string]: any } = {
+  const iconMap: { [key: string]: LucideIcon } = {
     // OTURMA ODASI
     "Koltuk Takımları": Sofa,
     "Berjer": Armchair,
@@ -329,11 +332,12 @@ const MEGA_MENU_DATA = [
 ];
 
 export default function Header() {
-    const { sepetSayisi } = useSepet();
-    const { kullanici, cikisYap } = useAuth();
+    const { kullanici, cikisYap, yukleniyorMu } = useAuth();
     const [aktifMenu, setAktifMenu] = useState<string | null>(null);
     const [girisAcik, setGirisAcik] = useState(false);
     const [mobilMenuAcik, setMobilMenuAcik] = useState(false);
+    const [yorumModalAcik, setYorumModalAcik] = useState(false);
+    const kullaniciMenuRef = useRef<HTMLDivElement>(null);
 
     const placeholderKelimeListesi = [
         "Yatak + Baza + Başlık Alımlarında Alez veya Yastık Hediye!",
@@ -341,13 +345,34 @@ export default function Header() {
         "İstikbal kalitesiyle evinizi yenileyecek fırsatlar..."
     ];
     const [placeholderIndex, setPlaceholderIndex] = useState(0);
+    const mounted = useSyncExternalStore(
+        () => () => {},
+        () => true,
+        () => false
+    );
 
     useEffect(() => {
+        if (!mounted) return;
+
         const interval = setInterval(() => {
             setPlaceholderIndex((prev) => (prev + 1) % placeholderKelimeListesi.length);
         }, 3500);
         return () => clearInterval(interval);
-    }, []);
+    }, [mounted, placeholderKelimeListesi.length]);
+
+    useEffect(() => {
+        if (!girisAcik) return;
+
+        const handlePointerDown = (event: MouseEvent) => {
+            const target = event.target as Node;
+            if (!kullaniciMenuRef.current?.contains(target)) {
+                setGirisAcik(false);
+            }
+        };
+
+        document.addEventListener("click", handlePointerDown);
+        return () => document.removeEventListener("click", handlePointerDown);
+    }, [girisAcik]);
 
     return (
         <header className="w-full bg-white relative z-50 font-sans border-b border-gray-200 antialiased">
@@ -369,13 +394,15 @@ export default function Header() {
             <div className="w-full py-4 px-4 md:px-12 flex justify-between items-center gap-4 relative">
 
                 {/* Yüksek Kaliteli Harici Logo Alanı */}
-                <Link href="/" className="flex items-center select-none flex-shrink-0 h-[32px] w-[150px] md:h-[40px] md:w-[180px] relative">
+                <Link href="/" className="flex justify-center items-stretch select-none flex-shrink-0 h-[36px] w-[154px] md:h-[44px] md:w-[184px] relative overflow-hidden p-0 m-0">
                     <Image
-                        src="/istikbal-logo.png"
+                        src={withBasePath("/istikbal-logo.jpeg")}
                         alt="İstikbal Logosu"
-                        fill
+                        width={184}
+                        height={44}
                         priority
-                        className="object-contain object-left"
+                        sizes="(max-width: 768px) 154px, 184px"
+                        className="h-full w-auto max-w-full p-0 m-0"
                     />
                 </Link>
 
@@ -389,7 +416,12 @@ export default function Header() {
                         <span className="absolute left-4 text-gray-400 text-sm">🔍</span>
                         <input
                             type="text"
-                            placeholder={placeholderKelimeListesi[placeholderIndex]}
+                            placeholder={
+                                mounted
+                                    ? placeholderKelimeListesi[placeholderIndex]
+                                    : placeholderKelimeListesi[0]
+                            }
+                            suppressHydrationWarning
                             className="w-full pl-10 pr-4 md:pr-16 py-2 md:py-2.5 text-xs md:text-[13px] font-normal border border-gray-300 rounded-full focus:outline-none focus:border-[#00519E] placeholder-gray-500 bg-white shadow-sm transition-all duration-500"
                         />
                         <button className="absolute right-5 text-xs font-bold text-gray-700 hover:text-[#00519E] cursor-pointer hidden md:block">
@@ -402,8 +434,9 @@ export default function Header() {
                 <div className="flex items-center gap-4 md:gap-6 text-[12px] md:text-[13px] font-semibold text-gray-700 flex-shrink-0">
 
                     {/* Giriş / Kullanıcı Popup */}
-                    <div className="relative h-full flex items-center py-2">
+                    <div ref={kullaniciMenuRef} className="relative h-full flex items-center py-2 z-[120]">
                         <button
+                            type="button"
                             onClick={() => setGirisAcik(!girisAcik)}
                             className="flex items-center gap-1.5 hover:text-[#00519E] focus:outline-none cursor-pointer"
                         >
@@ -414,15 +447,32 @@ export default function Header() {
                         </button>
 
                         {girisAcik && (
-                            <div className="absolute top-[40px] right-0 w-[250px] bg-white border border-gray-200 shadow-2xl rounded-md p-4 z-50 text-left flex flex-col gap-2">
+                            <div className="absolute top-[40px] right-0 w-[250px] bg-white border border-gray-200 shadow-2xl rounded-md p-4 z-[120] text-left flex flex-col gap-2">
                                 {kullanici ? (
                                     <>
-                                        <p className="text-xs text-gray-500 font-semibold truncate">
+                                        <Link
+                                            href={kullanici.username ? getProfilePath(kullanici.username) : "/profil"}
+                                            onClick={() => setGirisAcik(false)}
+                                            className="text-xs text-[#00519E] font-bold truncate hover:underline underline-offset-2"
+                                        >
                                             Merhaba, {kullanici.firstName} {kullanici.lastName}
-                                        </p>
-                                        <Link href="/profil" onClick={() => setGirisAcik(false)} className="w-full bg-gray-100 text-gray-800 text-center py-2 rounded text-[12px] font-bold hover:bg-gray-200 transition-all">Profilim</Link>
-                                        <Link href="/siparislerim" onClick={() => setGirisAcik(false)} className="w-full bg-gray-100 text-gray-800 text-center py-2 rounded text-[12px] font-bold hover:bg-gray-200 transition-all">Siparişlerim</Link>
+                                        </Link>
+                                        <Link
+                                            href={kullanici.username ? getProfilePath(kullanici.username) : "/profil"}
+                                            onClick={() => setGirisAcik(false)}
+                                            className="w-full bg-gray-100 text-gray-800 text-center py-2 rounded text-[12px] font-bold hover:bg-gray-200 transition-all"
+                                        >
+                                            Profilim
+                                        </Link>
+                                        <Link
+                                            href={kullanici.username ? `${getProfilePath(kullanici.username)}?tab=about` : "/profil"}
+                                            onClick={() => setGirisAcik(false)}
+                                            className="w-full bg-gray-100 text-gray-800 text-center py-2 rounded text-[12px] font-bold hover:bg-gray-200 transition-all"
+                                        >
+                                            Kullanıcı Hakkında
+                                        </Link>
                                         <button
+                                            type="button"
                                             onClick={() => { setGirisAcik(false); cikisYap(); }}
                                             className="w-full border border-red-300 text-red-600 text-center py-2 rounded text-[12px] font-bold hover:bg-red-50 transition-all cursor-pointer"
                                         >
@@ -431,22 +481,48 @@ export default function Header() {
                                     </>
                                 ) : (
                                     <>
-                                        <Link href="/giris" onClick={() => setGirisAcik(false)} className="w-full bg-[#00519E] text-white text-center py-2 rounded text-[12px] font-bold hover:bg-opacity-95 transition-all">GİRİŞ YAP</Link>
-                                        <Link href="/kayit" onClick={() => setGirisAcik(false)} className="w-full border border-[#E30613] text-[#E30613] text-center py-2 rounded text-[12px] font-bold hover:bg-red-50/50 transition-all">Hemen Üye Ol</Link>
+                                        <Link
+                                            href="/giris"
+                                            onClick={() => setGirisAcik(false)}
+                                            className="w-full bg-[#00519E] text-white text-center py-2 rounded text-[12px] font-bold hover:bg-opacity-95 transition-all"
+                                        >
+                                            GİRİŞ YAP
+                                        </Link>
+                                        <Link
+                                            href="/kayit"
+                                            onClick={() => setGirisAcik(false)}
+                                            className="w-full border border-[#E30613] text-[#E30613] text-center py-2 rounded text-[12px] font-bold hover:bg-red-50/50 transition-all"
+                                        >
+                                            Hemen Üye Ol
+                                        </Link>
                                     </>
                                 )}
                             </div>
                         )}
                     </div>
 
-                    {/* Sepetim Bağlantısı */}
-                    <Link href="/sepetim" className="flex items-center gap-1.5 hover:text-[#00519E]">
-                        <span className="text-base">🛒</span>
-                        <span className="hidden sm:inline">Sepetim</span>
-                        <span className="bg-[#00519E] text-white text-[10px] w-4.5 h-4.5 rounded-full flex items-center justify-center font-bold">
-                            {sepetSayisi}
-                        </span>
-                    </Link>
+                    {/* Yorum Yap */}
+                    {kullanici ? (
+                        <Link
+                            href={`/urun/${DEFAULT_PRODUCT_ID}#yorumlar`}
+                            className="flex items-center gap-1.5 hover:text-[#00519E]"
+                        >
+                            <span className="text-base">💬</span>
+                            <span className="hidden sm:inline">Yorum Yap</span>
+                        </Link>
+                    ) : (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                if (yukleniyorMu) return;
+                                setYorumModalAcik(true);
+                            }}
+                            className="flex items-center gap-1.5 hover:text-[#00519E] cursor-pointer"
+                        >
+                            <span className="text-base">💬</span>
+                            <span className="hidden sm:inline">Yorum Yap</span>
+                        </button>
+                    )}
 
                     {/* Mobil Cihazlar İçin Menü Tetikleyici Buton */}
                     <button onClick={() => setMobilMenuAcik(!mobilMenuAcik)} className="block lg:hidden text-xl focus:outline-none p-1">
@@ -544,13 +620,38 @@ export default function Header() {
                 </div>
             </div>
 
-            {/* 4. SARI DUYURU BARO */}
-            <div className="w-full bg-[#FFE600] text-[#00519E] text-center py-2 text-[11px] md:text-[12px] font-black tracking-wide border-t border-b border-yellow-400 select-none leading-[1.25]">
-                <span className="block">Yatak + Baza + Başlık</span>
-                <span className="block">Alımlarında</span>
-                <span className="block">Sürpriz Hediyeler Sizleri Bekliyor</span>
+            {/* 4. DUYURU BARO */}
+            <div className="w-full bg-[#FCF9F2] text-gray-900 text-center px-3 md:px-6 text-[11px] md:text-[12px] font-black tracking-wide border-t border-b border-[#FCF9F2] select-none leading-[1.25] flex items-stretch justify-center gap-5 md:gap-10">
+                <div className="relative shrink-0 self-stretch w-14 md:w-16 overflow-hidden">
+                    <Image
+                        src={withBasePath("/koyu1.jpeg")}
+                        alt=""
+                        fill
+                        sizes="64px"
+                        aria-hidden="true"
+                        className="object-cover object-center"
+                    />
+                </div>
+
+                <div className="min-w-0 flex flex-col justify-center text-center py-2">
+                    <span className="block">Yatak + Baza + Başlık</span>
+                    <span className="block">Alımlarında</span>
+                    <span className="block">Sürpriz Hediyeler Sizleri Bekliyor</span>
+                </div>
+
+                <div className="relative shrink-0 self-stretch w-14 md:w-16 overflow-hidden">
+                    <Image
+                        src={withBasePath("/koyu1.jpeg")}
+                        alt=""
+                        fill
+                        sizes="64px"
+                        aria-hidden="true"
+                        className="object-cover object-center"
+                    />
+                </div>
             </div>
 
+            <CommentAuthPrompt open={yorumModalAcik} onClose={() => setYorumModalAcik(false)} />
         </header>
     );
 }

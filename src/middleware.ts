@@ -1,58 +1,42 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { tokenDogrula } from "@/lib/jwt";
-import { getCookiePath, withBasePath } from "@/lib/base-path";
+import { NextResponse, type NextRequest } from "next/server";
+import { BASE_PATH, withBasePath } from "@/lib/base-path";
+import { updateSession } from "@/lib/supabase/middleware";
 
-// Oturum açılması zorunlu olan rotalar
-const KORUNAN_ROTALAR = ["/sepetim", "/profil", "/siparislerim"];
+function stripBasePath(pathname: string): string {
+  if (BASE_PATH && pathname.startsWith(BASE_PATH)) {
+    return pathname.slice(BASE_PATH.length) || "/";
+  }
+  return pathname;
+}
+
+function requiresAuth(pathname: string): boolean {
+  const path = stripBasePath(pathname);
+
+  if (path === "/profil" || path === "/profil/") return true;
+  if (path === "/kullanici-hakkinda" || path.startsWith("/kullanici-hakkinda/")) return true;
+  if (path === "/profil/hakkimda" || path.startsWith("/profil/hakkimda/")) return true;
+
+  return false;
+}
 
 export async function middleware(request: NextRequest) {
-    const { pathname } = request.nextUrl;
+  const { response, user } = await updateSession(request);
+  const { pathname } = request.nextUrl;
 
-    // Korunan rota mı kontrol et
-    const korunanRota = KORUNAN_ROTALAR.some((rota) =>
-        pathname.startsWith(rota)
-    );
+  if (!requiresAuth(pathname)) {
+    return response;
+  }
 
-    if (!korunanRota) {
-        return NextResponse.next();
-    }
+  if (!user) {
+    const girisUrl = new URL(withBasePath("/giris"), request.url);
+    girisUrl.searchParams.set("uyari", "Bu sayfaya erişmek için giriş yapmalısınız.");
+    girisUrl.searchParams.set("from", pathname);
+    return NextResponse.redirect(girisUrl);
+  }
 
-    // Cookie'den token'ı oku
-    const token = request.cookies.get("istikbal_token")?.value;
-
-    if (!token) {
-        // Kullanıcıyı kayıt sayfasına yönlendir
-        const kayitUrl = new URL(withBasePath("/kayit"), request.url);
-        kayitUrl.searchParams.set(
-            "uyari",
-            "Lütfen öncelikle üye olunuz."
-        );
-        kayitUrl.searchParams.set("from", pathname);
-        return NextResponse.redirect(kayitUrl);
-    }
-
-    // Token'ı doğrula
-    const payload = await tokenDogrula(token);
-
-    if (!payload) {
-        // Geçersiz veya süresi dolmuş token — cookie'yi temizle ve yönlendir
-        const kayitUrl = new URL(withBasePath("/kayit"), request.url);
-        kayitUrl.searchParams.set(
-            "uyari",
-            "Lütfen öncelikle üye olunuz."
-        );
-        kayitUrl.searchParams.set("from", pathname);
-
-        const yanit = NextResponse.redirect(kayitUrl);
-        yanit.cookies.set("istikbal_token", "", { maxAge: 0, path: getCookiePath() });
-        return yanit;
-    }
-
-    // Kimlik doğrulandı — isteği devam ettir
-    return NextResponse.next();
+  return response;
 }
 
 export const config = {
-    matcher: ["/sepetim/:path*", "/profil/:path*", "/siparislerim/:path*"],
+  matcher: ["/profil", "/profil/:path*", "/kullanici-hakkinda", "/profile/:path*"],
 };

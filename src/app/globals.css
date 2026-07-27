@@ -292,6 +292,14 @@ body {
   transform: rotateY(180deg);
 }
 
+.flip-card:not(.flip-card--flipped) .flip-card__back {
+  pointer-events: none;
+}
+
+.flip-card.flip-card--flipped .flip-card__front {
+  pointer-events: none;
+}
+
 .flip-card__content {
   height: 100%;
   padding: 2rem;
@@ -562,6 +570,10 @@ body {
 
 .contact-btn--email .contact-btn__icon-wrap {
   background: rgba(227, 6, 19, 0.1);
+}
+
+.contact-btn--email {
+  cursor: pointer;
 }
 
 .contact-btn--email:hover {

@@ -12,8 +12,8 @@ export const storeContact = {
     href: "tel:05327460570",
   },
   email: {
-    display: "demkamobilyaistikbal@gmail.com",
-    href: "mailto:demkamobilyaistikbal@gmail.com",
+    display: "demkamobiyaistikbal@gmail.com",
+    href: "mailto:demkamobiyaistikbal@gmail.com",
   },
   website: {
     display: "istikbal.com.tr",

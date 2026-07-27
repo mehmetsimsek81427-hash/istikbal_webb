@@ -1,39 +1,30 @@
-// ─── Kullanıcı Kayıt Giriş Tipleri ───────────────────────────────────────────
-
 export interface KayitVerisi {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  phone?: string;
+  dateOfBirth?: string;
+  gender?: string;
 }
 
 export interface GirisVerisi {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 }
 
-// ─── API Yanıt Tipleri ───────────────────────────────────────────────────────
-
 export interface AuthYanit {
-    basarili: boolean;
-    mesaj: string;
-    kullanici?: KullaniciOzeti;
+  basarili: boolean;
+  mesaj: string;
+  kullanici?: KullaniciOzeti;
 }
 
 export interface KullaniciOzeti {
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-}
-
-// ─── JWT Payload Tipi ────────────────────────────────────────────────────────
-
-export interface JwtPayload {
-    id: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    iat?: number;
-    exp?: number;
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  username?: string;
+  avatarUrl?: string | null;
+  isAdmin: boolean;
 }
