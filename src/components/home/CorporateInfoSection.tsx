@@ -8,16 +8,18 @@ import { withBasePath } from "@/lib/base-path";
 const aboutText =
   "15 yılı aşkın süredir İstikbal ailesinin güvenilir çözüm ortağı olarak müşterilerimize kaliteli, konforlu ve estetik yaşam alanları sunuyoruz. Demka Mobilya olarak müşteri memnuniyetini her zaman ön planda tutuyor, zengin ürün yelpazemiz, uygun fiyat politikamız ve profesyonel hizmet anlayışımızla sizlere en iyi alışveriş deneyimini yaşatmayı hedefliyoruz. Siz de Demka Mobilya'nın kalite ve güvenini yakından keşfetmek için mağazamızı ziyaret edebilir veya bizimle iletişime geçebilirsiniz.";
 
-const managers: { name: string; role: string; bio: string; image?: string }[] = [
+const managers: { name: string; role: string; bio: string; image?: string; nameLines?: [string, string] }[] = [
   {
     name: "Mehmet Şimşek",
-    role: "Genel Müdür",
+    role: "Yönetici",
     image: "/slider6.jpeg",
     bio: "25 yılı aşkın süredir İstikbal bünyesinde edindiğim deneyim ve bilgi birikimiyle, meslek hayatıma çırak olarak başladığım bu yolculukta bugün Demka Mobilya'nın yönetiminde sizlere hizmet vermekten büyük gurur duyuyorum. Uzun yılların kazandırdığı tecrübe, müşteri odaklı hizmet anlayışı ve kaliteye verdiğimiz önem sayesinde her misafirimizi en doğru şekilde ağırlamayı hedefliyoruz. Sizleri mağazamızda ağırlamaktan mutluluk duyarız.",
   },
   {
     name: "İlknur Yıldız",
-    role: "Satış Danışmanı",
+    nameLines: ["İlknur", "Yıldız"],
+    role: "Müdür",
+    image: "/ilknur.png",
     bio: "Satış temsilcisi olarak başladığım bu yolculukta, müşterilerimizin ihtiyaçlarını en doğru şekilde analiz ederek onlara en uygun yaşam alanlarını sunmayı ilke edindim. Demka Mobilya'da güler yüzlü hizmet anlayışı, kaliteli ürünler ve müşteri memnuniyeti odaklı yaklaşımımızla her ziyaretçimizin kendini özel hissetmesini hedefliyoruz. Sizleri mağazamızda ağırlamaktan mutluluk duyarım.",
   },
 ];
@@ -106,12 +108,14 @@ function ContactButton({
 
 function ManagerCardContent({
   name,
+  nameLines,
   role,
   bio,
   imageSrc,
   flipped = false,
 }: {
   name: string;
+  nameLines?: [string, string];
   role: string;
   bio?: string;
   imageSrc?: string;
@@ -122,7 +126,17 @@ function ManagerCardContent({
       <div className="manager-card__stripe" aria-hidden="true" />
       <div className={`manager-card__body ${flipped ? "manager-card__body--back" : ""}`}>
         <ManagerAvatar imageSrc={imageSrc} name={name} large={!flipped} />
-        <h5 className="manager-card__name">{name}</h5>
+        <h5 className="manager-card__name">
+          {nameLines ? (
+            <>
+              {nameLines[0]}
+              <br />
+              {nameLines[1]}
+            </>
+          ) : (
+            name
+          )}
+        </h5>
         <p className="manager-card__role">{role}</p>
         {flipped && bio ? (
           <p className="corporate-text manager-card__bio">{bio}</p>
@@ -190,12 +204,12 @@ export default function CorporateInfoSection() {
                   className="h-full min-h-[280px]"
                   front={
                     <div className="flip-card__content flip-card__content--manager">
-                      <ManagerCardContent name={manager.name} role={manager.role} imageSrc={manager.image} />
+                      <ManagerCardContent name={manager.name} nameLines={manager.nameLines} role={manager.role} imageSrc={manager.image} />
                     </div>
                   }
                   back={
                     <div className="flip-card__content flip-card__content--scroll flip-card__content--manager">
-                      <ManagerCardContent name={manager.name} role={manager.role} bio={manager.bio} imageSrc={manager.image} flipped />
+                      <ManagerCardContent name={manager.name} nameLines={manager.nameLines} role={manager.role} bio={manager.bio} imageSrc={manager.image} flipped />
                     </div>
                   }
                 />
