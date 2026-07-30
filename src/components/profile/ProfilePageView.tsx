@@ -474,7 +474,7 @@ function ReadOnlyField({ label, value }: { label: string; value: string }) {
         type="text"
         value={value}
         readOnly
-        className="profile-readonly-input w-full rounded-xl border border-[#00519E]/15 bg-[#F8F9FA] px-4 py-2.5 text-sm text-[#0F365C]/70 cursor-not-allowed"
+        className="w-full rounded-xl border border-[#00519E]/15 bg-[#F8F9FA] px-4 py-2.5 text-sm text-[#0F365C]/70 cursor-not-allowed"
       />
     </div>
   );

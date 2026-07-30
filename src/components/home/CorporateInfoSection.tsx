@@ -136,7 +136,7 @@ function ManagerCardContent({
 
 export default function CorporateInfoSection() {
   return (
-    <div className="w-full px-4 md:px-12 mt-16 min-w-0 overflow-x-clip">
+    <div className="w-full px-4 md:px-12 mt-16">
       <div className="mb-8 pb-4 text-center">
         <h3 className="text-3xl md:text-[2.5rem] font-black text-[#00519E] tracking-tight">
           Mağazamız

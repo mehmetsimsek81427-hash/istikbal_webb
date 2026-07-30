@@ -5,7 +5,7 @@ import { storeContact } from "@/lib/contact";
 
 export default function Footer() {
     return (
-        <footer className="w-full bg-[#0A192F] text-gray-300 pt-16 pb-8 border-t border-white/10 font-sans antialiased overflow-x-clip">
+        <footer className="w-full bg-[#0A192F] text-gray-300 pt-16 pb-8 border-t border-white/10 font-sans antialiased">
 
             {/* Orijinal Sitedeki Geniş 10 Sütunlu Link İskelet Yapısı */}
             <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-10 gap-6 pb-12 border-b border-white/5">
@@ -187,7 +187,7 @@ export default function Footer() {
                     href={storeContact.googleMaps.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="footer-maps-cta flex flex-col items-center gap-1 px-[18px] py-[10px] bg-[#FBBF24] text-gray-900 rounded-full font-bold hover:bg-[#F59E0B] hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                    className="flex flex-col items-center gap-1 px-[18px] py-[10px] bg-[#FBBF24] text-gray-900 rounded-full font-bold hover:bg-[#F59E0B] hover:scale-105 hover:shadow-lg transition-all duration-300 cursor-pointer"
                 >
                     <span className="text-sm">MAĞAZAMIZI BULUN</span>
                     <span className="text-[10px] font-medium text-center">{storeContact.address.full}</span>
