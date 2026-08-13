@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect, useRef, useSyncExternalStore } from "react";
+import { useState, useEffect, useLayoutEffect, useRef, useCallback, useSyncExternalStore } from "react";
 import { useAuth } from "@/context/AuthContext";
 import CommentAuthPrompt from "@/components/comments/CommentAuthPrompt";
 import { DEFAULT_PRODUCT_ID } from "@/lib/products";
@@ -338,6 +338,33 @@ export default function Header() {
     const [mobilMenuAcik, setMobilMenuAcik] = useState(false);
     const [yorumModalAcik, setYorumModalAcik] = useState(false);
     const kullaniciMenuRef = useRef<HTMLDivElement>(null);
+    const categoryBarRef = useRef<HTMLDivElement>(null);
+    const menuItemRefs = useRef<Record<string, HTMLDivElement | null>>({});
+    const [megaMenuPosition, setMegaMenuPosition] = useState({ left: 0, width: 1180 });
+
+    const updateMegaMenuPosition = useCallback(() => {
+        if (!aktifMenu || !categoryBarRef.current) return;
+
+        const item = menuItemRefs.current[aktifMenu];
+        if (!item) return;
+
+        const bar = categoryBarRef.current;
+        const barRect = bar.getBoundingClientRect();
+        const menuWidth = Math.min(1180, bar.offsetWidth);
+        const viewportPadding = 16;
+        let left = item.offsetLeft;
+
+        if (barRect.left + left + menuWidth > window.innerWidth - viewportPadding) {
+            left = window.innerWidth - viewportPadding - menuWidth - barRect.left;
+        }
+
+        if (barRect.left + left < viewportPadding) {
+            left = viewportPadding - barRect.left;
+        }
+
+        left = Math.max(0, left);
+        setMegaMenuPosition({ left, width: menuWidth });
+    }, [aktifMenu]);
 
     const placeholderKelimeListesi = [
         "Yatak + Baza + Başlık Alımlarında Alez veya Yastık Hediye!",
@@ -373,6 +400,21 @@ export default function Header() {
         document.addEventListener("click", handlePointerDown);
         return () => document.removeEventListener("click", handlePointerDown);
     }, [girisAcik]);
+
+    useLayoutEffect(() => {
+        updateMegaMenuPosition();
+    }, [updateMegaMenuPosition]);
+
+    useEffect(() => {
+        if (!aktifMenu) return;
+
+        window.addEventListener("resize", updateMegaMenuPosition);
+        window.addEventListener("scroll", updateMegaMenuPosition, true);
+        return () => {
+            window.removeEventListener("resize", updateMegaMenuPosition);
+            window.removeEventListener("scroll", updateMegaMenuPosition, true);
+        };
+    }, [aktifMenu, updateMegaMenuPosition]);
 
     return (
         <header className="w-full bg-white relative z-50 font-sans border-b border-gray-200 antialiased">
@@ -533,11 +575,17 @@ export default function Header() {
 
             {/* 3. KATEGORİ ÇUBUĞU (9 Bölümün Tümü Eksiksiz Korundu, Esnek ve Ekranı Kaplayan Yapıda) */}
             <div className={`w-full border-t border-gray-200 bg-white ${mobilMenuAcik ? "block" : "hidden lg:block"}`}>
-                <div className="w-full px-4 md:px-12 flex flex-col lg:flex-row lg:items-center lg:justify-between lg:h-11 text-[13px] font-bold text-gray-900 tracking-tight relative">
+                <div
+                    ref={categoryBarRef}
+                    className="w-full px-4 md:px-12 flex flex-col lg:flex-row lg:items-center lg:justify-between lg:h-11 text-[13px] font-bold text-gray-900 tracking-tight relative"
+                >
 
                     {MEGA_MENU_DATA.map((menu) => (
                         <div
                             key={menu.id}
+                            ref={(element) => {
+                                menuItemRefs.current[menu.id] = element;
+                            }}
                             className="w-full lg:w-auto py-2 lg:py-0 h-full flex flex-col lg:flex-row lg:items-center border-b-2 border-transparent hover:border-[#00519E] transition-all whitespace-nowrap"
                             onMouseEnter={() => setAktifMenu(menu.id)}
                             onMouseLeave={() => setAktifMenu(null)}
@@ -549,11 +597,14 @@ export default function Header() {
 
                             {/* MEGA DROPDOWN PANEL (Premium E-Ticaret Tasarımı) */}
                             {aktifMenu === menu.id && (
-                                <div className={`absolute top-11 w-full max-w-[1180px] bg-white border border-gray-200 rounded-2xl shadow-[0_12px_30px_rgba(0,0,0,0.12)] p-6 grid gap-4 z-50 text-left animate-fadeIn ${
-                                    menu.id === 'oturma-odasi' ? 'left-0' : 
-                                    menu.id === 'online-ozel' ? 'right-0' : 
-                                    'left-1/2 -translate-x-1/2'
-                                }`} style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+                                <div
+                                    className="absolute top-11 max-w-[1180px] bg-white border border-gray-200 rounded-2xl shadow-[0_12px_30px_rgba(0,0,0,0.12)] p-6 grid gap-4 z-50 text-left animate-fadeIn"
+                                    style={{
+                                        gridTemplateColumns: "repeat(4, 1fr)",
+                                        left: megaMenuPosition.left,
+                                        width: megaMenuPosition.width,
+                                    }}
+                                >
 
                                     {/* KATEGORİ LİNKLERİ */}
                                     <div className={`col-span-4 grid gap-x-4 gap-y-3 ${
